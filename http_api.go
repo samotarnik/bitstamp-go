@@ -19,6 +19,9 @@ import (
 
 func urlMerge(baseUrl url.URL, urlPath string, queryParams ...[2]string) string {
 	baseUrl.Path = path.Join(baseUrl.Path, urlPath)
+	if urlPath[len(urlPath)-1:] == "/" {
+		baseUrl.Path += "/"
+	}
 
 	// add query params
 	values := baseUrl.Query()
