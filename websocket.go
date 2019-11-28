@@ -10,7 +10,7 @@ import (
 )
 
 const bitstampWsUrl = "wss://ws.bitstamp.net"
-const wsTimeout = 60 * time.Second
+const defaultWsTimeout = 60 * time.Second
 
 type WsEvent struct {
 	Event   string      `json:"event"`
@@ -26,7 +26,12 @@ type WsClient struct {
 	Errors   chan error
 }
 
-func NewWsClient() (*WsClient, error) {
+// Creates a client that connects to Bitstamp's websocket url
+func NewDefaultWsClient() (*WsClient, error) {
+	return NewWsClient(bitstampWsUrl, defaultWsTimeout)
+}
+
+func NewWsClient(wsUrl string, wsTimeout time.Duration) (*WsClient, error) {
 	c := WsClient{
 		done:   make(chan bool, 1),
 		Stream: make(chan *WsEvent),
@@ -34,7 +39,7 @@ func NewWsClient() (*WsClient, error) {
 	}
 
 	// set up websocket
-	ws, _, err := websocket.DefaultDialer.Dial(bitstampWsUrl, nil)
+	ws, _, err := websocket.DefaultDialer.Dial(wsUrl, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error dialing websocket: %s", err)
 	}

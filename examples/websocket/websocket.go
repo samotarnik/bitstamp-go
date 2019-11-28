@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	c, err := bitstamp.NewWsClient()
+	c, err := bitstamp.NewDefaultWsClient()
 	if err != nil {
 		log.Panicf("error initializing client %v", err)
 	}
